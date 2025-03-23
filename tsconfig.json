@@ -7,5 +7,6 @@
       "@/*": ["./src/*"],
       "@renderer/*": ["./src/renderer/src/*"]
     },
+    "esModuleInterop": true,
   }
 }
