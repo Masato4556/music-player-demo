@@ -1,10 +1,12 @@
 import demoAudio from '@renderer/assets/demo.mp3'
 import { Button } from '../ui/button'
-import { useMusic } from './useAudio'
+import { useAudioControls } from './useAudioControls'
 import { ProgressBar } from './ProgressBar'
+import { useSetAudio } from './useSetAudio'
 
-export const Player = () => {
-  const { play, pause, stop } = useMusic(demoAudio)
+export const Player = (): JSX.Element => {
+  useSetAudio(demoAudio)
+  const { play, pause, stop } = useAudioControls()
   return (
     <>
       <Button
