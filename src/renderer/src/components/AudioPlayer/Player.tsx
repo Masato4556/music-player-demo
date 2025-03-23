@@ -1,12 +1,17 @@
 import demoAudio from '@renderer/assets/demo.mp3'
 import { Button } from '../ui/button'
-import { useAudioControls } from './useAudioControls'
 import { ProgressBar } from './ProgressBar'
-import { useSetAudio } from './useSetAudio'
+import { useSetAudio, useAudioControls } from './AudioContext'
+import { useEffect } from 'react'
 
 export const Player = (): JSX.Element => {
-  useSetAudio(demoAudio)
+  const { setAudioSrc } = useSetAudio()
   const { play, pause, stop } = useAudioControls()
+
+  useEffect(() => {
+    setAudioSrc(demoAudio)
+  }, [setAudioSrc])
+
   return (
     <>
       <Button
