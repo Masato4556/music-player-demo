@@ -1,4 +1,3 @@
-import Versions from './components/Versions'
 import { Player } from './components/AudioPlayer/Player'
 import { AudioProvider } from './components/AudioPlayer/AudioContext'
 
@@ -8,8 +7,6 @@ function App(): JSX.Element {
       <AudioProvider>
         <Player />
       </AudioProvider>
-
-      <Versions />
     </>
   )
 }

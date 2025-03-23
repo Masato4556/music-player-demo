@@ -2,7 +2,9 @@ import { cn } from '@renderer/lib/utils'
 import { Slider } from '../ui/slider'
 import { useAudioProgress } from './AudioContext'
 
-export const ProgressBar = (): JSX.Element => {
+type Props = React.ComponentProps<typeof Slider>
+
+export const ProgressBar = (props: Props): JSX.Element => {
   const { currentTime, duration, seek } = useAudioProgress()
 
   const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,15 +21,14 @@ export const ProgressBar = (): JSX.Element => {
   }
 
   return (
-    <div className="w-[60%]">
-      <Slider
-        value={[(currentTime / duration) * 100 || 0]}
-        min={0}
-        max={100}
-        onChange={handleSeek}
-        onClick={onClick}
-        className={cn('w-full')}
-      />
-    </div>
+    <Slider
+      value={[(currentTime / duration) * 100 || 0]}
+      min={0}
+      max={100}
+      onChange={handleSeek}
+      onClick={onClick}
+      className={cn('w-full')}
+      {...props}
+    />
   )
 }
