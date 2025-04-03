@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState, useEffect, useCallback } from 'react'
+import React, { createContext, useContext, useRef, useState, useCallback } from 'react'
 
 type AudioContextType = {
   setAudio: (src: string) => void
@@ -70,13 +70,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     audioRef.current.currentTime = time
     setCurrentTime(time)
   }
-
-  // useEffect(() => {
-  //   const updateTime = async () => {
-  //     setCurrentTime(audioRef.current.currentTime)
-  //   }
-  //   audioRef.current.addEventListener('timeupdate', updateTime)
-  // }, [audioUpdated])
 
   return (
     <AudioContext.Provider
