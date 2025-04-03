@@ -1,3 +1,4 @@
+import { Seconds } from '@renderer/components/AudioPlayer/Seconds'
 import React, { createContext, useContext, useRef, useState, useCallback } from 'react'
 
 type AudioContextType = {
@@ -7,7 +8,7 @@ type AudioContextType = {
   pause: () => void
   stop: () => void
   currentTime: number
-  duration: number
+  duration: Seconds
   seek: (time: number) => void
 }
 
@@ -16,14 +17,14 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined)
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const audioRef = useRef<HTMLAudioElement>(new Audio())
   const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
+  const [duration, setDuration] = useState(new Seconds(0))
 
   const setAudio = useCallback(
     (filePath: string) => {
       audioRef.current.pause()
       audioRef.current = new Audio(filePath)
       audioRef.current.onloadedmetadata = () => {
-        setDuration(audioRef.current.duration)
+        setDuration(new Seconds(audioRef.current.duration))
       }
       audioRef.current.onerror = (error) => {
         console.error('Audio load error:', error)

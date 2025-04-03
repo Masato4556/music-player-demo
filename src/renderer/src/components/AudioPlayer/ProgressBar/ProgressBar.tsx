@@ -12,7 +12,7 @@ export const ProgressBar = (props: Props): JSX.Element => {
 
   return (
     <Slider
-      value={[(currentTime / duration) * 100 || 0]}
+      value={[(currentTime / duration.value()) * 100 || 0]}
       min={0}
       max={100}
       onValueChange={onValueChange}

@@ -1,10 +1,11 @@
 import { renderHook } from '@testing-library/react'
 import { useOnValueChange } from './useOnValueChange'
+import { Seconds } from '../Seconds'
 
 describe('useOnValueChange', () => {
   it('should call seek with the correct time when value changes', () => {
     const mockSeek = jest.fn()
-    const duration = 200
+    const duration = new Seconds(200)
     const { result } = renderHook(() => useOnValueChange(duration, mockSeek))
 
     const onValueChange = result.current
@@ -15,7 +16,7 @@ describe('useOnValueChange', () => {
 
   it('should call seek with 0 when value is 0', () => {
     const mockSeek = jest.fn()
-    const duration = 200
+    const duration = new Seconds(200)
     const { result } = renderHook(() => useOnValueChange(duration, mockSeek))
 
     const onValueChange = result.current
@@ -26,7 +27,7 @@ describe('useOnValueChange', () => {
 
   it('should call seek with the full duration when value is 100', () => {
     const mockSeek = jest.fn()
-    const duration = 200
+    const duration = new Seconds(200)
     const { result } = renderHook(() => useOnValueChange(duration, mockSeek))
 
     const onValueChange = result.current
@@ -37,7 +38,7 @@ describe('useOnValueChange', () => {
 
   it('should throw error if value array is empty', () => {
     const mockSeek = jest.fn()
-    const duration = 150
+    const duration = new Seconds(200)
     const { result } = renderHook(() => useOnValueChange(duration, mockSeek))
 
     const onValueChange = result.current
