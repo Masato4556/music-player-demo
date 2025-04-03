@@ -7,7 +7,7 @@ type AudioContextType = {
   play: () => void
   pause: () => void
   stop: () => void
-  currentTime: number
+  currentTime: Seconds
   duration: Seconds
   seek: (time: number) => void
 }
@@ -16,7 +16,7 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined)
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const audioRef = useRef<HTMLAudioElement>(new Audio())
-  const [currentTime, setCurrentTime] = useState(0)
+  const [currentTime, setCurrentTime] = useState(new Seconds(0))
   const [duration, setDuration] = useState(new Seconds(0))
 
   const setAudio = useCallback(
@@ -30,7 +30,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         console.error('Audio load error:', error)
       }
       const updateTime = async () => {
-        setCurrentTime(audioRef.current.currentTime)
+        setCurrentTime(new Seconds(audioRef.current.currentTime))
       }
       audioRef.current.addEventListener('timeupdate', updateTime)
       audioRef.current.load() // ロードを強制的に開始
@@ -64,12 +64,12 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const stop = () => {
     audioRef.current.pause()
     audioRef.current.currentTime = 0
-    setCurrentTime(0)
+    setCurrentTime(new Seconds(0))
   }
 
   const seek = (time: number) => {
     audioRef.current.currentTime = time
-    setCurrentTime(time)
+    setCurrentTime(new Seconds(time))
   }
 
   return (
