@@ -1,7 +1,9 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Menu, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { createMenu } from './createMenu'
+import { readFile } from 'fs/promises'
 
 function createWindow(): void {
   // Create the browser window.
@@ -14,12 +16,13 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      nodeIntegration: true,
+      contextIsolation: false
     }
   })
 
-  mainWindow.setBackgroundColor('#000')
-  mainWindow.setAspectRatio(670 / 900)
+  mainWindow.setAspectRatio(400 / 600)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -37,6 +40,31 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  ipcMain.handle('open-file-dialog', async () => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [{ name: 'Audio Files', extensions: ['mp3', 'wav', 'ogg', 'flac'] }]
+    })
+    if (!result.canceled) {
+      // const fileUrl = pathToFileURL(result.filePaths[0]).toString()
+      // return fileUrl
+      return result.filePaths[0]
+    }
+    return null
+  })
+
+  ipcMain.handle('read-audio-file', async (event, filePath: string) => {
+    try {
+      const data = await readFile(filePath)
+      return data.buffer // ArrayBuffer を返す
+    } catch (err) {
+      console.error('ファイル読み込みエラー:', err)
+      return null
+    }
+  })
+
+  Menu.setApplicationMenu(createMenu(mainWindow))
 }
 
 // This method will be called when Electron has finished

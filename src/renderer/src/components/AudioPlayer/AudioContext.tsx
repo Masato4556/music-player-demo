@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useRef, useState, useEffect, useCallback } from 'react'
 
 type AudioContextType = {
-  setAudioSrc: (src: string) => void
+  setAudio: (src: string) => void
+  openAudio: () => Promise<void>
   play: () => void
   pause: () => void
   stop: () => void
@@ -17,15 +18,39 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
 
-  const setAudioSrc = useCallback(
-    (src: string) => {
-      audioRef.current.src = src
+  const setAudio = useCallback(
+    (filePath: string) => {
+      audioRef.current.pause()
+      audioRef.current = new Audio(filePath)
       audioRef.current.onloadedmetadata = () => {
         setDuration(audioRef.current.duration)
       }
+      audioRef.current.onerror = (error) => {
+        console.error('Audio load error:', error)
+      }
+      const updateTime = async () => {
+        setCurrentTime(audioRef.current.currentTime)
+      }
+      audioRef.current.addEventListener('timeupdate', updateTime)
+      audioRef.current.load() // ロードを強制的に開始
     },
     [setDuration]
   )
+
+  const openAudio = useCallback(async () => {
+    // TODO: blobURLに変換せずに直接srcに設定できないか検討する
+    const filePath = await window.api.openFile()
+    console.log(filePath)
+    if (filePath === null) return
+
+    const audioData = await window.api.readFile(filePath)
+    if (audioData === null) return
+
+    const blob = new Blob([audioData], { type: 'audio/mpeg' })
+    const url = URL.createObjectURL(blob)
+
+    setAudio(url)
+  }, [setAudio])
 
   const play = () => {
     audioRef.current.play()
@@ -46,15 +71,17 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setCurrentTime(time)
   }
 
-  useEffect(() => {
-    const updateTime = async () => {
-      setCurrentTime(audioRef.current.currentTime)
-    }
-    audioRef.current.addEventListener('timeupdate', updateTime)
-  }, [])
+  // useEffect(() => {
+  //   const updateTime = async () => {
+  //     setCurrentTime(audioRef.current.currentTime)
+  //   }
+  //   audioRef.current.addEventListener('timeupdate', updateTime)
+  // }, [audioUpdated])
 
   return (
-    <AudioContext.Provider value={{ setAudioSrc, play, pause, stop, currentTime, duration, seek }}>
+    <AudioContext.Provider
+      value={{ setAudio, openAudio, play, pause, stop, currentTime, duration, seek }}
+    >
       {children}
     </AudioContext.Provider>
   )
@@ -73,9 +100,9 @@ export const useAudioControls = (): Pick<AudioContextType, 'play' | 'pause' | 's
   return { play, pause, stop }
 }
 
-export const useSetAudio = (): Pick<AudioContextType, 'setAudioSrc'> => {
-  const { setAudioSrc } = useAudio()
-  return { setAudioSrc }
+export const useSetAudio = (): Pick<AudioContextType, 'setAudio' | 'openAudio'> => {
+  const { setAudio, openAudio } = useAudio()
+  return { setAudio, openAudio }
 }
 
 export const useAudioProgress = (): Pick<AudioContextType, 'currentTime' | 'duration' | 'seek'> => {
