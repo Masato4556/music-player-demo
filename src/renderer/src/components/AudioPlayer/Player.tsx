@@ -1,6 +1,6 @@
 import electronLogo from '@renderer/assets/electron.svg'
 import { Button } from '../ui/button'
-import { ProgressBar } from './ProgressBar'
+import { ProgressBar } from './ProgressBar/ProgressBar'
 import { useSetAudio, useAudioControls } from './AudioContext'
 import { Card, CardContent, CardHeader } from '../ui/card'
 
