@@ -1,6 +1,6 @@
 import electronLogo from '@renderer/assets/electron.svg'
 import { Button } from '../ui/button'
-import { ProgressBar } from './ProgressBar/ProgressBar'
+import { SeekBar } from './ProgressBar/SeekBar'
 import { useSetAudio, useAudioControls } from './AudioContext'
 import { Card, CardContent, CardHeader } from '../ui/card'
 
@@ -57,7 +57,7 @@ export const Player = (): JSX.Element => {
             ⏹️
           </Button>
         </div>
-        <ProgressBar className="bg-gray-700 text-white" />
+        <SeekBar className="bg-gray-700 text-white" />
       </CardContent>
     </Card>
   )

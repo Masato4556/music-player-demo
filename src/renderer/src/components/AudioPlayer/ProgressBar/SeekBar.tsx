@@ -5,7 +5,7 @@ import { useOnValueChange } from './useOnValueChange'
 
 type Props = React.ComponentProps<typeof Slider>
 
-export const ProgressBar = (props: Props): JSX.Element => {
+export const SeekBar = (props: Props): JSX.Element => {
   const { currentTime, duration, seek } = useAudioProgress()
   console.log(duration)
   const onValueChange = useOnValueChange(duration, seek)
