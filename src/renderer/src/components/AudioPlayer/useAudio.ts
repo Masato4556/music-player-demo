@@ -1,15 +1,18 @@
 import { useRef, useState, useCallback } from 'react'
 import { Seconds } from './Seconds'
+import { Volume } from './Volume'
 
 export const useAudio = () => {
   const audioRef = useRef<HTMLAudioElement>(new Audio())
   const [currentTime, setCurrentTime] = useState(new Seconds(0))
   const [duration, setDuration] = useState(new Seconds(0))
+  const [volume, setVolume] = useState(new Volume(100))
 
   const setAudio = useCallback(
     (filePath: string) => {
       audioRef.current.pause()
       audioRef.current = new Audio(filePath)
+      audioRef.current.volume = volume.toHTMLAudioElementVolume()
       audioRef.current.onloadedmetadata = () => {
         setDuration(new Seconds(audioRef.current.duration))
       }
@@ -22,7 +25,7 @@ export const useAudio = () => {
       audioRef.current.addEventListener('timeupdate', updateTime)
       audioRef.current.load() // ロードを強制的に開始
     },
-    [setDuration]
+    [setDuration, setCurrentTime, volume]
   )
 
   const openAudio = useCallback(async () => {
@@ -59,6 +62,11 @@ export const useAudio = () => {
     setCurrentTime(new Seconds(time))
   }
 
+  const changeVolume = (volume: Volume) => {
+    audioRef.current.volume = volume.toHTMLAudioElementVolume()
+    setVolume(volume)
+  }
+
   return {
     setAudio,
     openAudio,
@@ -67,6 +75,8 @@ export const useAudio = () => {
     stop,
     currentTime,
     duration,
-    seek
+    seek,
+    volume,
+    changeVolume
   }
 }
