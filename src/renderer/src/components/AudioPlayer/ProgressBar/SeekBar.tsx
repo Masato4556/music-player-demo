@@ -11,7 +11,7 @@ export const SeekBar = (props: Props): JSX.Element => {
   const onValueChange = useOnValueChange(duration, seek)
 
   return (
-    <div className={cn('w-full')}>
+    <div className={cn('w-full my-2')}>
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs text-muted-foreground">
           {formatTime(currentTime)} / {formatTime(duration)}

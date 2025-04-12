@@ -16,9 +16,11 @@ export const VolumeBar = (props: Props): JSX.Element => {
   }
 
   return (
-    <div className={cn('w-full')}>
+    <div className={cn('w-full my-2')}>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-muted-foreground">{volume.getValue().toString()}</span>
+        <span className="text-xs text-muted-foreground">
+          Volume: {volume.getValue().toString()}
+        </span>
       </div>
       <Slider
         value={[volume.getValue()]}

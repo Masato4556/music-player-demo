@@ -4,6 +4,7 @@ import { SeekBar } from './ProgressBar/SeekBar'
 import { useSetAudio, useAudioControls } from './AudioContext'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import { VolumeBar } from './VolumeBar'
+import { BpmBar } from './BPMControl/BpmBar'
 
 export const Player = (): JSX.Element => {
   const { openAudio } = useSetAudio()
@@ -60,6 +61,7 @@ export const Player = (): JSX.Element => {
         </div>
         <SeekBar className="bg-gray-700 text-white" />
         <VolumeBar className="bg-gray-700 text-white" />
+        <BpmBar></BpmBar>
       </CardContent>
     </Card>
   )
