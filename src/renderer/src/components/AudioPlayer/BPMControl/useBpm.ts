@@ -34,6 +34,10 @@ export const useBpm = () => {
 
   const start = useCallback(() => {
     nextNoteTime.current = audioContext.current.currentTime
+    if (timerId.current !== null) {
+      clearTimeout(timerId.current) // 既存のタイマーをクリア
+      timerId.current = null
+    }
     scheduler()
   }, [scheduler])
 
@@ -42,7 +46,6 @@ export const useBpm = () => {
       clearTimeout(timerId.current) // タイマーをクリア
       timerId.current = null
     }
-    audioContext.current.suspend()
   }, [])
 
   const setBpmValue = useCallback(
@@ -53,9 +56,9 @@ export const useBpm = () => {
       }
       setBpm(value)
       nextNoteTime.current = audioContext.current.currentTime
-      scheduler() // 新しいBPMでスケジューラを再起動
+      // scheduler() // 新しいBPMでスケジューラを再起動
     },
-    [setBpm, audioContext, scheduler]
+    [setBpm, audioContext]
   )
 
   const getBpm = useCallback(() => {

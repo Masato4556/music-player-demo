@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 type Props = React.ComponentProps<typeof Slider>
 
 export const BpmBar = (props: Props): JSX.Element => {
-  const { getBpm, setBpm, setCallback } = useBpm()
+  const { getBpm, setBpm, setCallback, start, stop } = useBpm()
 
   useEffect(() => {
     const callback = () => {
@@ -27,7 +27,19 @@ export const BpmBar = (props: Props): JSX.Element => {
       <div className="flex items-center justify-between  mb-2">
         <span className="text-xs text-muted-foreground">BPM: {getBpm().toString()}</span>
       </div>
-      <Slider value={[getBpm()]} min={0} max={120} onValueChange={onValueChange} {...props} />
+      <Slider
+        value={[getBpm()]}
+        min={0}
+        max={120}
+        onValueChange={onValueChange}
+        onPointerDown={() => {
+          stop()
+        }}
+        onPointerUp={() => {
+          start()
+        }}
+        {...props}
+      />
     </div>
   )
 }
